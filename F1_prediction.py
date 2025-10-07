@@ -256,16 +256,29 @@ print("\n" + "=" * 60)
 print("🏁 VOORSPEL NIEUWE RACE")
 print("=" * 60)
 
-# Toon beschikbare races
+# Toon beschikbare races (focus op 2023-2024)
 available_races = races[races['raceId'] > cutoff_race_id].sort_values('date')
-print(f"\n📋 Beschikbare races voor voorspelling (NA training cutoff):")
-print("=" * 60)
-for _, race in available_races.head(20).iterrows():
-    print(f"   ID {race['raceId']:4d}: {race['name']:30s} - {race['date']}")
-print("=" * 60)
+recent_races = available_races[available_races['year'] >= 2023]
+
+print(f"\n📋 Beschikbare races voor voorspelling (2023-2024 seizoenen):")
+print("=" * 85)
+if len(recent_races) > 0:
+    print("🏁 2023-2024 SEIZOEN (Meest Recente Data):")
+    print("-" * 85)
+    for _, race in recent_races.iterrows():
+        print(f"   ID {race['raceId']:4d}: {race['name']:40s} | {race['date']}")
+    print("=" * 85)
+else:
+    print("   Geen 2023-2024 races beschikbaar na cutoff")
+    print("\n📋 Oudere races beschikbaar:")
+    print("=" * 85)
+    for _, race in available_races.head(20).iterrows():
+        print(f"   ID {race['raceId']:4d}: {race['name']:30s} - {race['date']}")
+    print("=" * 85)
 
 # Laat gebruiker kiezen
-target_race_id = int(input("\n🏎️  Voer race ID in om te voorspellen: "))
+print(f"\n💡 TIP: Kies een race uit 2023-2024 voor de meest recente voorspelling!")
+target_race_id = int(input("🏎️  Voer race ID in om te voorspellen: "))
 
 # Valideer dat race NA cutoff ligt
 if target_race_id <= cutoff_race_id:
